@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#07080f" />
+  <meta name="description" content="Neon Empire — idle megacity tycoon. Tap the Core, buy ventures, hire managers, and ascend." />
+  <title>NEON EMPIRE</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Orbitron:wght@500;700;800;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <canvas id="fx" aria-hidden="true"></canvas>
+  <div id="floats" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="grid-overlay" aria-hidden="true"></div>
+
+  <!-- TITLE -->
+  <div id="title" class="screen title-screen">
+    <div class="title-bg"></div>
+    <div class="title-wash"></div>
+    <div class="title-inner">
+      <img class="title-mark" src="assets/title-logo.jpg" alt="Neon Empire emblem" />
+      <p class="title-kicker">DISTRICT 01 · MEGACORP LICENSE</p>
+      <h1 class="title-name">NEON EMPIRE</h1>
+      <p class="title-tag">Idle megacity tycoon. Start with a street stall. End with a singularity.</p>
+      <div class="title-actions">
+        <button id="btn-new" class="btn btn-lg btn-cyan">Initialize</button>
+        <button id="btn-continue" class="btn btn-lg btn-gold hidden">Continue</button>
+      </div>
+      <p class="title-hint">Tap the Core · Run ventures · Hire managers · Ascend</p>
+    </div>
+  </div>
+
+  <!-- GAME -->
+  <div id="game" class="screen game-screen hidden">
+    <header class="topbar">
+      <div class="brand">
+        <img src="assets/title-logo.jpg" alt="" />
+        <div>
+          <h1>NEON EMPIRE</h1>
+          <p id="district-label">District 01</p>
+        </div>
+      </div>
+      <div class="wealth">
+        <div id="money" class="money">$0</div>
+        <div class="rates">
+          <span id="rate-active">$0/s active</span>
+          <span class="dot">·</span>
+          <span id="rate-idle">$0/s idle</span>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button id="cores-chip" class="chip chip-gold" title="Neon Cores">
+          <img src="assets/prestige.jpg" alt="" />
+          <span id="cores-count">0</span>
+          <small>CORES</small>
+        </button>
+        <button id="btn-settings" class="icon-btn" title="Settings" aria-label="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="rail">
+        <button id="core" class="core" type="button" aria-label="Tap the Core">
+          <img src="assets/core.jpg" alt="" />
+          <span class="core-rings"></span>
+          <span class="core-rings delay"></span>
+          <span class="core-hud">
+            <span class="core-label">TAP CORE</span>
+            <span id="core-power" class="core-power">+$1</span>
+          </span>
+          <span id="combo" class="combo hidden">COMBO x2</span>
+        </button>
+
+        <div class="boosts">
+          <button id="boost-overclock" class="boost" data-boost="overclock">
+            <span class="boost-name">OVERCLOCK</span>
+            <span class="boost-meta">5× speed · 10s</span>
+            <span class="boost-cd"></span>
+          </button>
+          <button id="boost-surge" class="boost" data-boost="surge">
+            <span class="boost-name">NEON SURGE</span>
+            <span class="boost-meta">3× payout · 20s</span>
+            <span class="boost-cd"></span>
+          </button>
+        </div>
+
+        <div class="rail-stats">
+          <div><span>Clicks</span><b id="stat-clicks">0</b></div>
+          <div><span>Ventures</span><b id="stat-owned">0</b></div>
+          <div><span>Managers</span><b id="stat-mgr">0/10</b></div>
+          <div><span>Play</span><b id="stat-time">0:00</b></div>
+        </div>
+      </aside>
+
+      <section class="stage">
+        <nav class="tabs" role="tablist">
+          <button class="tab on" data-tab="ventures" role="tab">Ventures</button>
+          <button class="tab" data-tab="upgrades" role="tab">Upgrades</button>
+          <button class="tab" data-tab="managers" role="tab">Managers</button>
+          <button class="tab" data-tab="prestige" role="tab">Ascend</button>
+          <button class="tab" data-tab="feats" role="tab">Feats</button>
+        </nav>
+
+        <div class="toolbar" id="ventures-toolbar">
+          <div class="buy-mult" role="group" aria-label="Buy amount">
+            <span>BUY</span>
+            <button class="mult on" data-mult="1">×1</button>
+            <button class="mult" data-mult="10">×10</button>
+            <button class="mult" data-mult="100">×100</button>
+            <button class="mult" data-mult="-1">MAX</button>
+          </div>
+          <p id="milestone-hint" class="hint">Milestones at 10 · 25 · 50 · 100 speed up every venture</p>
+        </div>
+
+        <div id="view-ventures" class="view on" role="tabpanel"></div>
+        <div id="view-upgrades" class="view" role="tabpanel"></div>
+        <div id="view-managers" class="view" role="tabpanel"></div>
+        <div id="view-prestige" class="view" role="tabpanel"></div>
+        <div id="view-feats" class="view" role="tabpanel"></div>
+      </section>
+    </div>
+
+    <div id="event-bar" class="event-bar hidden"></div>
+    <footer class="ticker-wrap">
+      <span class="ticker-live">LIVE</span>
+      <div class="ticker"><div id="ticker" class="ticker-track"></div></div>
+    </footer>
+  </div>
+
+  <!-- MODALS -->
+  <div id="modal-offline" class="modal hidden">
+    <div class="modal-card">
+      <p class="kicker">WELCOME BACK</p>
+      <h2>Managers kept the district running</h2>
+      <p id="offline-time" class="muted"></p>
+      <div class="offline-payout" id="offline-payout">$0</div>
+      <button id="btn-offline" class="btn btn-lg btn-cyan">Collect</button>
+    </div>
+  </div>
+
+  <div id="modal-prestige" class="modal hidden">
+    <div class="modal-card prestige-card">
+      <img src="assets/prestige.jpg" alt="" class="prestige-art" />
+      <p class="kicker">ASCENSION</p>
+      <h2>Burn the district. Keep the cores.</h2>
+      <p class="muted">Ventures, cash upgrades, and managers reset. Neon Cores and feats stay. Production forever rises.</p>
+      <div class="prestige-gain" id="prestige-gain"></div>
+      <div class="modal-actions">
+        <button id="btn-prestige-cancel" class="btn">Abort</button>
+        <button id="btn-prestige-confirm" class="btn btn-gold">Ascend</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-settings" class="modal hidden">
+    <div class="modal-card">
+      <p class="kicker">SYSTEM</p>
+      <h2>Settings</h2>
+      <label class="toggle"><input type="checkbox" id="opt-sound" checked /> Sound</label>
+      <label class="toggle"><input type="checkbox" id="opt-particles" checked /> Particles</label>
+      <label class="field">Notation
+        <select id="opt-notation">
+          <option value="standard">Standard (K, M, B)</option>
+          <option value="sci">Scientific</option>
+        </select>
+      </label>
+      <div class="modal-actions wrap">
+        <button id="btn-export" class="btn">Export save</button>
+        <button id="btn-import" class="btn">Import save</button>
+        <button id="btn-reset" class="btn btn-danger">Hard reset</button>
+        <button id="btn-settings-close" class="btn btn-cyan">Close</button>
+      </div>
+      <p id="settings-msg" class="muted"></p>
+    </div>
+  </div>
+
+  <div id="toasts"></div>
+  <div id="coach" class="coach hidden"></div>
+
+  <script src="js/game.js"></script>
+</body>
+</html>
