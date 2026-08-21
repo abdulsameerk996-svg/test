@@ -53,6 +53,9 @@
           <span class="dot">·</span>
           <span id="rate-idle">$0/s idle</span>
         </div>
+        <div id="core-progress" class="core-progress" title="Progress to next Neon Core">
+          <div id="core-progress-fill"></div>
+        </div>
       </div>
       <div class="top-actions">
         <button id="cores-chip" class="chip chip-gold" title="Neon Cores">
@@ -65,6 +68,21 @@
         </button>
       </div>
     </header>
+
+    <div class="district" id="district">
+      <div class="district-sky"></div>
+      <div class="district-haze"></div>
+      <div id="cars" class="cars" aria-hidden="true"></div>
+      <div class="district-world" id="city-world"></div>
+      <div class="district-ground"></div>
+      <button id="collect-all" class="collect-all hidden" type="button">COLLECT ALL</button>
+      <div id="rank-tag" class="rank-tag">ALLEY RAT</div>
+    </div>
+    <div id="goal-strip" class="goal-strip">
+      <span id="goal-label">Tap the Core</span>
+      <div class="bar goal-bar"><div id="goal-fill" class="bar-fill"></div></div>
+      <span id="goal-eta"></span>
+    </div>
 
     <div class="layout">
       <aside class="rail">
@@ -90,6 +108,11 @@
             <span class="boost-meta">3× payout · 20s</span>
             <span class="boost-cd"></span>
           </button>
+          <div id="contract" class="contract">
+            <span class="boost-name">CONTRACT</span>
+            <span id="contract-desc" class="boost-meta">Scanning the district…</span>
+            <div class="bar"><div id="contract-fill" class="bar-fill"></div></div>
+          </div>
         </div>
 
         <div class="rail-stats">
@@ -182,6 +205,7 @@
     </div>
   </div>
 
+  <button id="lucky-orb" class="lucky-orb hidden" type="button" aria-label="Lucky neon"></button>
   <div id="toasts"></div>
   <div id="coach" class="coach hidden"></div>
 

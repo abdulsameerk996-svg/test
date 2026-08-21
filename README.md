@@ -12,6 +12,8 @@ python3 -m http.server 8080
 
 Then visit `http://localhost:8080`.
 
+The district skyline grows in 2.5D as you buy ventures. Collect cash piles on buildings, chase lucky neon orbs, and always chase the goal in the strip under the city.
+
 ## How to run a district
 
 1. **Tap the Core** to mint cash (or press Space).

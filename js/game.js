@@ -20,10 +20,33 @@
     lab: `<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="16" cy="16" r="3"/><ellipse cx="16" cy="16" rx="12" ry="5"/><ellipse cx="16" cy="16" rx="12" ry="5" transform="rotate(60 16 16)"/><ellipse cx="16" cy="16" rx="12" ry="5" transform="rotate(-60 16 16)"/></svg>`
   };
 
+  const RANKS = [
+    { at: 0, name: "ALLEY RAT" },
+    { at: 10, name: "BLOCK BOSS" },
+    { at: 40, name: "NEON LANDLORD" },
+    { at: 100, name: "DISTRICT CHAIR" },
+    { at: 250, name: "MEGACORP" },
+    { at: 600, name: "SKYLINE KING" },
+    { at: 1200, name: "SINGULARITY" }
+  ];
+
+  const CITY_SLOTS = [
+    { id: "stall", x: -310, z: 50, w: 28 },
+    { id: "arcade", x: -250, z: 10, w: 32 },
+    { id: "club", x: -185, z: 40, w: 34 },
+    { id: "cafe", x: -120, z: -10, w: 30 },
+    { id: "casino", x: -50, z: 30, w: 40 },
+    { id: "factory", x: 25, z: 5, w: 42 },
+    { id: "mall", x: 100, z: 35, w: 46 },
+    { id: "port", x: 175, z: -5, w: 38 },
+    { id: "bank", x: 245, z: 25, w: 44 },
+    { id: "lab", x: 320, z: 8, w: 36 }
+  ];
+
   const BUSINESSES = [
-    { id: "stall", name: "Street Stall", tag: "Noodles after midnight", baseCost: 4, costMult: 1.07, baseTime: 0.6, basePayout: 1, color: "#ff7a45" },
-    { id: "arcade", name: "Holo Arcade", tag: "Cabinets that never sleep", baseCost: 60, costMult: 1.15, baseTime: 3, basePayout: 60, color: "#00e5ff" },
-    { id: "club", name: "Pulse Club", tag: "Bass you can bill", baseCost: 720, costMult: 1.14, baseTime: 6, basePayout: 540, color: "#ff2bd6" },
+    { id: "stall", name: "Street Stall", tag: "Noodles after midnight", baseCost: 3, costMult: 1.07, baseTime: 0.5, basePayout: 1, color: "#ff7a45" },
+    { id: "arcade", name: "Holo Arcade", tag: "Cabinets that never sleep", baseCost: 45, costMult: 1.14, baseTime: 2.4, basePayout: 50, color: "#00e5ff" },
+    { id: "club", name: "Pulse Club", tag: "Bass you can bill", baseCost: 520, costMult: 1.14, baseTime: 5, basePayout: 420, color: "#ff2bd6" },
     { id: "cafe", name: "Crypto Cafe", tag: "Caffeine and hash rates", baseCost: 8640, costMult: 1.13, baseTime: 12, basePayout: 4320, color: "#7cff6b" },
     { id: "casino", name: "Chrome Casino", tag: "The house always compounds", baseCost: 103680, costMult: 1.12, baseTime: 24, basePayout: 51840, color: "#ffd166" },
     { id: "factory", name: "Drone Works", tag: "Assembly in the clouds", baseCost: 1.24416e6, costMult: 1.13, baseTime: 48, basePayout: 622080, color: "#5b8cff" },
@@ -34,8 +57,8 @@
   ];
 
   const MANAGERS = [
-    { id: "stall", name: "Mei Lin", title: "Night Chef", cost: 1000, flavor: "Never drops the shutter. Broth on a closed loop." },
-    { id: "arcade", name: "Rex Volt", title: "High Score", cost: 15000, flavor: "Keeps every cabinet humming past dawn." },
+    { id: "stall", name: "Mei Lin", title: "Night Chef", cost: 250, flavor: "Never drops the shutter. Broth on a closed loop." },
+    { id: "arcade", name: "Rex Volt", title: "High Score", cost: 8000, flavor: "Keeps every cabinet humming past dawn." },
     { id: "club", name: "Nyx Halo", title: "Door Queen", cost: 100000, flavor: "The line never dies. Neither does the till." },
     { id: "cafe", name: "Ada Hash", title: "Barista-Miner", cost: 500000, flavor: "Double shot, double hash, zero downtime." },
     { id: "casino", name: "Silas Gild", title: "Pit Boss", cost: 2.5e6, flavor: "Luck is a spreadsheet if you own the floor." },
@@ -47,12 +70,12 @@
   ];
 
   const UPGRADES = [
-    { id: "tap1", name: "Calibrated Tap", desc: "Core clicks pay ×2.", cost: 50, kind: "click", mult: 2 },
+    { id: "tap1", name: "Calibrated Tap", desc: "Core clicks pay ×2.", cost: 25, kind: "click", mult: 2 },
     { id: "tap2", name: "Servo Fist", desc: "Core clicks ×2 again.", cost: 400, kind: "click", mult: 2, req: "tap1" },
     { id: "tap3", name: "Neural Trigger", desc: "Core clicks ×3.", cost: 5000, kind: "click", mult: 3, req: "tap2" },
     { id: "tap4", name: "Quantum Finger", desc: "Core clicks ×5.", cost: 2e5, kind: "click", mult: 5, req: "tap3" },
     { id: "tap5", name: "God Mode Input", desc: "Core clicks ×10.", cost: 5e7, kind: "click", mult: 10, req: "tap4" },
-    { id: "stall1", name: "Secret Broth", desc: "Street Stall ×3.", cost: 250, kind: "biz", biz: "stall", mult: 3 },
+    { id: "stall1", name: "Secret Broth", desc: "Street Stall ×3.", cost: 80, kind: "biz", biz: "stall", mult: 3 },
     { id: "stall2", name: "All-Night Permit", desc: "Street Stall ×3.", cost: 2500, kind: "biz", biz: "stall", mult: 3, req: "stall1" },
     { id: "arcade1", name: "Token Flood", desc: "Holo Arcade ×3.", cost: 2000, kind: "biz", biz: "arcade", mult: 3 },
     { id: "arcade2", name: "Free Play Fridays", desc: "Holo Arcade ×3.", cost: 25000, kind: "biz", biz: "arcade", mult: 3, req: "arcade1" },
@@ -106,7 +129,9 @@
     { id: "play5", name: "Night Shift", desc: "Play for 5 minutes.", test: (s) => s.playTime >= 300 },
     { id: "upg5", name: "Spec Sheet", desc: "Buy 5 cash upgrades.", test: (s) => Object.values(s.upgrades).filter(Boolean).length >= 5 },
     { id: "boost", name: "Juice", desc: "Fire Overclock or Neon Surge.", test: (s) => s.stats.boosts >= 1 },
-    { id: "lab1", name: "Event Horizon", desc: "Found the Singularity Lab.", test: (s) => s.biz.lab.owned >= 1 }
+    { id: "lab1", name: "Event Horizon", desc: "Found the Singularity Lab.", test: (s) => s.biz.lab.owned >= 1 },
+    { id: "orb1", name: "Catch a Star", desc: "Click a lucky neon orb.", test: (s) => (s.stats.orbs || 0) >= 1 },
+    { id: "job1", name: "Contractor", desc: "Clear 3 contracts.", test: (s) => (s.stats.contracts || 0) >= 3 }
   ];
 
   const NEWS = [
@@ -153,7 +178,7 @@
 
   function emptyBiz() {
     const biz = {};
-    for (const b of BUSINESSES) biz[b.id] = { owned: 0, timer: 0, running: false, manager: false };
+    for (const b of BUSINESSES) biz[b.id] = { owned: 0, timer: 0, running: false, manager: false, claim: 0 };
     return biz;
   }
 
@@ -180,13 +205,17 @@
       upgrades: {},
       coreUpgrades: {},
       feats: {},
-      stats: { bought: 0, boosts: 0, maxCombo: 0, collected: 0 },
+      stats: { bought: 0, boosts: 0, maxCombo: 0, collected: 0, orbs: 0, contracts: 0 },
       boosts: {
         overclock: { until: 0, cd: 0 },
         surge: { until: 0, cd: 0 }
       },
       event: null,
-      nextEventAt: 90
+      nextEventAt: 28,
+      frenzyUntil: 0,
+      nextOrbAt: 14,
+      orb: null,
+      contract: null
     };
   }
 
@@ -199,6 +228,8 @@
   let fx;
   let comboTimer = 0;
   let moneyPopAt = 0;
+  let cityDirty = true;
+  let citySig = "";
 
   /* ---------- audio ---------- */
   const AudioEng = {
@@ -318,7 +349,9 @@
     for (const u of UPGRADES) if (u.kind === "click" && ownedUpgrade(u.id)) p *= u.mult;
     for (const u of CORE_SHOP) if (u.kind === "click" && ownedCore(u.id)) p *= u.mult;
     const combo = 1 + Math.max(0, state.combo - 1) * 0.05;
-    return p * combo * prestigeMult();
+    let m = p * combo * prestigeMult();
+    if (nowSec() < (state.frenzyUntil || 0)) m *= 77;
+    return m;
   }
 
   function critChance() {
@@ -402,10 +435,33 @@
     return Math.max(1, n);
   }
 
+  function nextMilestone(owned) {
+    for (const m of SPEED_MILESTONES) if (owned < m) return m;
+    for (const m of PAY_MILESTONES) if (owned < m) return m;
+    return owned + 50;
+  }
+
   function buyCount(biz) {
     if (state.buyMult === -1) return maxAffordable(biz);
+    if (state.buyMult === -2) {
+      const owned = state.biz[biz.id].owned;
+      const need = nextMilestone(owned) - owned;
+      const max = maxAffordable(biz);
+      return Math.min(need, max);
+    }
     const n = state.buyMult;
     return costFor(biz, n) <= state.money ? n : 0;
+  }
+
+  function totalClaim() {
+    return BUSINESSES.reduce((a, b) => a + (state.biz[b.id].claim || 0), 0);
+  }
+
+  function districtRank() {
+    const owned = BUSINESSES.reduce((a, b) => a + state.biz[b.id].owned, 0);
+    let name = RANKS[0].name;
+    for (const r of RANKS) if (owned >= r.at) name = r.name;
+    return name;
   }
 
   function isUnlocked(i) {
@@ -492,28 +548,79 @@
     if (wasZero) {
       AudioEng.unlock();
       toast("VENTURE ONLINE", biz.name);
-    } else AudioEng.buy();
-    if (s.manager) {
       s.running = true;
-      if (wasZero) s.timer = 0;
-    }
+      s.timer = 0;
+    } else AudioEng.buy();
+    if (s.manager) s.running = true;
     if (state.tutorial === 1 && id === "stall") state.tutorial = 2;
+    if (state.contract && state.contract.type === "buy") {
+      state.contract.progress += n;
+    }
     dirty.ventures = true;
     dirty.upgrades = true;
     dirty.managers = true;
     dirty.feats = true;
+    cityDirty = true;
     checkFeats();
     updateCoach();
   }
 
   function runBiz(id) {
     const s = state.biz[id];
-    if (s.owned <= 0 || s.running || s.manager) return;
+    if (s.owned <= 0) return;
+    if (s.claim > 0) { collectBiz(id); return; }
+    if (s.running || s.manager) return;
     s.running = true;
     s.timer = 0;
     AudioEng.click();
     if (state.tutorial === 2) state.tutorial = 3;
     updateCoach();
+  }
+
+  function collectBiz(id, silent) {
+    const s = state.biz[id];
+    const gain = s.claim || 0;
+    if (gain <= 0) return 0;
+    s.claim = 0;
+    addMoney(gain, "collect");
+    if (state.contract && state.contract.type === "collect") state.contract.progress += 1;
+    if (!silent) {
+      AudioEng.collect();
+      const plot = document.querySelector(`.plot[data-biz="${id}"]`);
+      if (plot) {
+        const r = plot.getBoundingClientRect();
+        floatText(r.left + r.width / 2, r.top, "+" + money(gain), "#3dff9a");
+        Particles.spawn(r.left + r.width / 2, r.top, "#3dff9a", 10);
+      }
+    }
+    if (s.owned > 0) s.running = true;
+    if (state.tutorial === 2) state.tutorial = 3;
+    return gain;
+  }
+
+  function collectAll() {
+    let total = 0;
+    for (const b of BUSINESSES) total += collectBiz(b.id, true);
+    if (total <= 0) return;
+    AudioEng.collect();
+    toast("COLLECTED", money(total));
+    const el = $("collect-all");
+    if (el) {
+      const r = el.getBoundingClientRect();
+      floatText(r.left + r.width / 2, r.top, "+" + money(total), "#3dff9a");
+    }
+  }
+
+  function tapCity(id) {
+    const s = state.biz[id];
+    if (!s) return;
+    if (s.claim > 0) collectBiz(id);
+    else if (s.owned > 0 && !s.running) runBiz(id);
+    else {
+      setTab("ventures");
+      const card = document.querySelector(`article[data-biz="${id}"]`);
+      if (card) card.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
   }
 
   function hireManager(id) {
@@ -525,6 +632,7 @@
     state.money -= cost;
     s.manager = true;
     if (s.owned > 0) s.running = true;
+    if (s.claim > 0) { addMoney(s.claim, "collect"); s.claim = 0; }
     AudioEng.unlock();
     toast("MANAGER HIRED", m.name + " · " + m.title);
     dirty.managers = true;
@@ -605,6 +713,7 @@
     AudioEng.prestige();
     toast("ASCENDED", "+" + gain + " Neon Cores");
     dirty = { ventures: true, upgrades: true, managers: true, prestige: true, feats: true };
+    cityDirty = true;
     hideModal("modal-prestige");
     $("district-label").textContent = "District " + String(state.prestiges + 1).padStart(2, "0");
     rebuildAll();
@@ -647,11 +756,12 @@
       const t = cycleTime(biz);
       s.timer += dt;
       if (s.timer >= t) {
-        const cycles = s.manager ? Math.floor(s.timer / t) : 1;
+        const cycles = Math.max(1, Math.floor(s.timer / t));
         const gain = payout(biz) * cycles;
-        addMoney(gain, "collect");
-        s.timer = s.manager ? s.timer % t : 0;
-        if (!s.manager) s.running = false;
+        if (s.manager) addMoney(gain, "collect");
+        else s.claim = (s.claim || 0) + gain;
+        s.timer = s.timer % t;
+        s.running = true;
       }
     }
 
@@ -660,6 +770,9 @@
       $("event-bar").classList.add("hidden");
     }
     if (!state.event && nowSec() >= state.nextEventAt) spawnEvent();
+    if (state.orb && nowSec() >= state.orb.until) hideOrb();
+    if (!state.orb && nowSec() >= (state.nextOrbAt || 14)) spawnOrb();
+    tickContract();
 
     checkFeats();
   }
@@ -675,11 +788,206 @@
     } else {
       state.event = { type: "speed", until: nowSec() + 20, name: "TIME PIPE · all speed ×2" };
     }
-    state.nextEventAt = nowSec() + 80 + Math.random() * 80;
+    state.nextEventAt = nowSec() + 55 + Math.random() * 70;
     const bar = $("event-bar");
     bar.textContent = "EVENT · " + state.event.name;
     bar.classList.remove("hidden");
     AudioEng.unlock();
+  }
+
+  function spawnOrb() {
+    const types = ["frenzy", "lucky", "storm"];
+    const type = types[Math.floor(Math.random() * types.length)];
+    state.orb = { type, until: nowSec() + 13 };
+    const el = $("lucky-orb");
+    if (!el) return;
+    el.classList.remove("hidden");
+    el.style.left = (8 + Math.random() * 70) + "vw";
+    el.style.top = (18 + Math.random() * 40) + "vh";
+    AudioEng.unlock();
+  }
+
+  function hideOrb() {
+    state.orb = null;
+    state.nextOrbAt = nowSec() + 22 + Math.random() * 40;
+    const el = $("lucky-orb");
+    if (el) el.classList.add("hidden");
+  }
+
+  function clickOrb() {
+    if (!state.orb) return;
+    const type = state.orb.type;
+    hideOrb();
+    state.stats.orbs = (state.stats.orbs || 0) + 1;
+    if (type === "frenzy") {
+      state.frenzyUntil = nowSec() + 13;
+      toast("CLICK FRENZY", "Core taps ×77 for 13s");
+    } else if (type === "lucky") {
+      const r = rates();
+      const gain = Math.max(25, (r.active || clickPower()) * 30);
+      addMoney(gain, "lucky");
+      toast("LUCKY NEON", "+" + money(gain));
+    } else {
+      state.boosts.overclock.until = nowSec() + 12;
+      toast("TIME STORM", "All ventures 5× speed");
+    }
+    AudioEng.prestige();
+    const el = $("lucky-orb");
+    if (el) {
+      const r = el.getBoundingClientRect();
+      Particles.spawn(r.left + 27, r.top + 27, "#ffd166", 28);
+    }
+    checkFeats();
+  }
+
+  function ensureContract() {
+    if (state.contract) return;
+    const r = rates();
+    const roll = Math.random();
+    if (roll < 0.4) {
+      const target = Math.max(20, Math.floor((r.active || 2) * 25 + state.money * 0.4));
+      state.contract = { type: "earn", target, progress: 0, startMoney: state.runEarned, reward: target * 0.35 };
+    } else if (roll < 0.7) {
+      state.contract = { type: "collect", target: 8, progress: 0, reward: Math.max(15, (r.active || 1) * 12) };
+    } else {
+      state.contract = { type: "buy", target: 5, progress: 0, reward: Math.max(20, (r.active || 1) * 15) };
+    }
+  }
+
+  function tickContract() {
+    ensureContract();
+    const c = state.contract;
+    if (!c) return;
+    if (c.type === "earn") c.progress = Math.max(0, state.runEarned - (c.startMoney || 0));
+    if (c.progress >= c.target) {
+      addMoney(c.reward, "contract");
+      state.stats.contracts = (state.stats.contracts || 0) + 1;
+      toast("CONTRACT CLEAR", "+" + money(c.reward));
+      AudioEng.unlock();
+      state.contract = null;
+    }
+  }
+
+  function cityCopies(owned) {
+    if (owned <= 0) return 0;
+    if (owned < 10) return 1;
+    if (owned < 25) return 2;
+    if (owned < 50) return 3;
+    return 4;
+  }
+
+  function renderCity(force) {
+    const world = $("city-world");
+    if (!world) return;
+    const sig = BUSINESSES.map((b) => state.biz[b.id].owned).join(",") + "|" + BUSINESSES.map((b, i) => isUnlocked(i) ? 1 : 0).join("");
+    if (!force && !cityDirty && sig === citySig) {
+      updateCityClaims();
+      return;
+    }
+    citySig = sig;
+    cityDirty = false;
+    let html = "";
+    CITY_SLOTS.forEach((slot, idx) => {
+      const biz = BUSINESSES.find((b) => b.id === slot.id);
+      const s = state.biz[slot.id];
+      const unlocked = isUnlocked(idx);
+      const copies = unlocked ? cityCopies(s.owned) : 0;
+      const h = s.owned > 0 ? 34 + Math.min(s.owned, 80) * 1.8 : 26;
+      const n = Math.max(copies, unlocked ? 0 : 0);
+      if (copies === 0) {
+        html += `<div class="plot empty ${unlocked ? "" : "ghost"}" data-biz="${slot.id}" style="--x:${slot.x}px;--z:${slot.z}px;--c:${biz.color};--w:${slot.w}px;--h:26px;--lit:0.15">
+          <div class="tower" style="--h:26px;--w:${slot.w}px;--c:${biz.color}">
+            <div class="tower-side"></div>
+            <div class="tower-front"><span class="tower-sign">${unlocked ? "LOT" : "??"}</span></div>
+            <div class="tower-top"></div>
+          </div>
+        </div>`;
+        return;
+      }
+      for (let k = 0; k < copies; k++) {
+        const dx = slot.x + k * 18;
+        const dz = slot.z - k * 16;
+        const hk = h + k * 10;
+        html += `<div class="plot" data-biz="${slot.id}" style="--x:${dx}px;--z:${dz}px;--c:${biz.color};--w:${slot.w}px;--h:${hk}px;--lit:${clamp(0.25 + s.owned / 80, 0.25, 0.95)}">
+          <div class="tower" style="--h:${hk}px;--w:${slot.w}px;--c:${biz.color};--lit:${clamp(0.25 + s.owned / 80, 0.25, 0.95)}">
+            <div class="tower-side"></div>
+            <div class="tower-front"><span class="tower-sign">${k === copies - 1 ? biz.name.slice(0, 8).toUpperCase() : ""}</span></div>
+            <div class="tower-top"></div>
+          </div>
+          <div class="claim-bubble hidden" data-claim="${slot.id}"></div>
+        </div>`;
+      }
+    });
+    world.innerHTML = html;
+    world.querySelectorAll(".plot").forEach((p) => {
+      p.addEventListener("click", (e) => {
+        e.stopPropagation();
+        tapCity(p.dataset.biz);
+      });
+    });
+    updateCityClaims();
+  }
+
+  function updateCityClaims() {
+    document.querySelectorAll(".plot").forEach((p) => {
+      const id = p.dataset.biz;
+      const s = state.biz[id];
+      if (!s) return;
+      p.classList.toggle("hot", !!(s.running && s.owned));
+      const bubble = p.querySelector(".claim-bubble");
+      if (!bubble) return;
+      if (s.claim > 0) {
+        bubble.classList.remove("hidden");
+        bubble.textContent = "+" + money(s.claim);
+      } else bubble.classList.add("hidden");
+    });
+    const all = $("collect-all");
+    if (all) all.classList.toggle("hidden", totalClaim() <= 0);
+    const rank = $("rank-tag");
+    if (rank) rank.textContent = districtRank();
+  }
+
+  function updateGoal() {
+    const label = $("goal-label");
+    const fill = $("goal-fill");
+    const eta = $("goal-eta");
+    if (!label) return;
+    let text = "Keep the district humming";
+    let p = 0;
+    let extra = "";
+    if (state.tutorial === 0) { text = "Tap the Core"; p = Math.min(1, state.totalClicks / 1); }
+    else if (state.biz.stall.owned < 1) { text = "Buy a Street Stall — your skyline starts here"; p = clamp(state.money / 3, 0, 1); extra = money(Math.max(0, 3 - state.money)); }
+    else if (!state.biz.stall.manager && state.biz.stall.owned > 0) {
+      const cost = mgrCost(MANAGERS[0]);
+      text = "Hire Mei Lin — go idle";
+      p = clamp(state.money / cost, 0, 1);
+      extra = money(Math.max(0, cost - state.money));
+    } else {
+      let best = null;
+      for (const biz of BUSINESSES) {
+        const s = state.biz[biz.id];
+        if (s.owned <= 0) continue;
+        const ms = nextMilestone(s.owned);
+        const need = ms - s.owned;
+        const c = costFor(biz, need);
+        if (!best || c < best.c) best = { biz, ms, need, c };
+      }
+      if (best) {
+        text = `${best.biz.name} ${state.biz[best.biz.id].owned}/${best.ms} · next 2× speed`;
+        p = state.biz[best.biz.id].owned / best.ms;
+        extra = money(best.c) + " to NEXT";
+      }
+      const pc = pendingCores();
+      const nextNeed = Math.pow(pc + 1, 2) * 1e6;
+      if (state.runEarned > nextNeed * 0.35) {
+        text = "Neon Core in reach — earn toward Ascend";
+        p = clamp(state.runEarned / nextNeed, 0, 1);
+        extra = money(Math.max(0, nextNeed - state.runEarned));
+      }
+    }
+    label.textContent = text;
+    if (fill) fill.style.transform = `scaleX(${clamp(p, 0, 1)})`;
+    if (eta) eta.textContent = extra;
   }
 
   function simulateOffline(seconds) {
@@ -733,6 +1041,7 @@
               <span class="pay" data-pay="${biz.id}">${money(payout(biz))}</span>
               <span data-time="${biz.id}">${cycleTime(biz).toFixed(2)}s</span>
             </div>
+            <div class="ms-row" data-ms="${biz.id}"></div>
           </div>
           <div class="biz-actions">
             <button class="btn btn-buy" data-buy="${biz.id}" ${unlocked ? "" : "disabled"}></button>
@@ -763,13 +1072,20 @@
       if (owned) owned.textContent = "×" + s.owned;
       const buy = card.querySelector("[data-buy]");
       if (buy) {
-        const n = state.buyMult === -1 ? maxAffordable(biz) : state.buyMult;
+        const n = buyCount(biz);
         const c = n > 0 ? costFor(biz, n) : firstCost(biz);
         const can = n > 0 && state.money >= c;
-        buy.textContent = n > 0 ? `Buy ×${n}  ${money(c)}` : `Buy  ${money(firstCost(biz))}`;
+        const tag = state.buyMult === -2 ? "Next" : (state.buyMult === -1 ? "Max" : "×" + (n || state.buyMult));
+        buy.textContent = n > 0 ? `Buy ${tag}  ${money(c)}` : `Buy  ${money(firstCost(biz))}`;
         buy.classList.toggle("can", can);
         buy.disabled = !isUnlocked(BUSINESSES.indexOf(biz)) || !can;
       }
+      const ms = card.querySelector("[data-ms]");
+      if (ms && s.owned > 0) {
+        const m = nextMilestone(s.owned);
+        ms.innerHTML = `<span>Next 2× at <b>${m}</b></span><span>${s.owned}/${m}</span>`;
+      } else if (ms) ms.textContent = "";
+      card.classList.toggle("claimable", (s.claim || 0) > 0);
       const run = card.querySelector("[data-run]");
       if (run) {
         if (s.manager) {
@@ -780,6 +1096,10 @@
           run.textContent = "RUN";
           run.disabled = true;
           run.classList.remove("pulse");
+        } else if (s.claim > 0) {
+          run.textContent = "COLLECT " + money(s.claim);
+          run.disabled = false;
+          run.classList.add("pulse");
         } else if (s.running) {
           run.textContent = "RUNNING";
           run.disabled = true;
@@ -904,6 +1224,8 @@
   function rebuildAll() {
     dirty = { ventures: true, upgrades: true, managers: true, prestige: true, feats: true };
     renderVentures(true);
+    cityDirty = true;
+    renderCity(true);
     if (tab === "upgrades") renderUpgrades();
     if (tab === "managers") renderManagers();
     if (tab === "prestige") renderPrestige();
@@ -964,6 +1286,25 @@
       const left = Math.max(0, state.event.until - nowSec());
       $("event-bar").textContent = "EVENT · " + state.event.name + " · " + left.toFixed(0) + "s";
     }
+
+    const nextNeed = Math.pow(pendingCores() + 1, 2) * 1e6;
+    const cpf = $("core-progress-fill");
+    if (cpf) cpf.style.width = (clamp(state.runEarned / nextNeed, 0, 1) * 100) + "%";
+
+    if (nowSec() < (state.frenzyUntil || 0)) {
+      $("core-power").textContent = "FRENZY +" + money(clickPower());
+    }
+
+    const c = state.contract;
+    const cd = $("contract-desc");
+    const cf = $("contract-fill");
+    if (c && cd) {
+      const names = { earn: "Earn " + money(c.target), collect: "Collect " + c.target + " piles", buy: "Buy " + c.target + " buildings" };
+      cd.textContent = names[c.type] + " · +" + money(c.reward);
+      if (cf) cf.style.transform = `scaleX(${clamp(c.progress / c.target, 0, 1)})`;
+    } else if (cd) cd.textContent = "New contract incoming…";
+
+    updateGoal();
   }
 
   function updateBoost(kind, dur, cd) {
@@ -996,7 +1337,7 @@
     const steps = [
       { t: 0, text: "Tap the Core to mint your first credits.", attach: "#core" },
       { t: 1, text: "Buy a Street Stall — your first venture.", attach: "[data-biz='stall'] [data-buy]" },
-      { t: 2, text: "Hit RUN. The bar is money in motion.", attach: "[data-biz='stall'] [data-run]" },
+      { t: 2, text: "When the stall lights up, COLLECT — or tap the building.", attach: "[data-biz='stall'] [data-run]" },
       { t: 3, text: "Hire managers to go idle. Ascend later for Neon Cores.", attach: ".tab[data-tab='managers']" }
     ];
     const step = steps.find((s) => s.t === state.tutorial);
@@ -1034,8 +1375,9 @@
       state = Object.assign(base, data);
       state.biz = Object.assign(emptyBiz(), data.biz || {});
       for (const b of BUSINESSES) {
-        state.biz[b.id] = Object.assign({ owned: 0, timer: 0, running: false, manager: false }, state.biz[b.id]);
+        state.biz[b.id] = Object.assign({ owned: 0, timer: 0, running: false, manager: false, claim: 0 }, state.biz[b.id]);
       }
+      state.stats = Object.assign({ bought: 0, boosts: 0, maxCombo: 0, collected: 0, orbs: 0, contracts: 0 }, state.stats || {});
       displayMoney = state.money;
       return true;
     } catch (e) {
@@ -1087,6 +1429,7 @@
       tick(dt);
       renderHud(dt);
       renderVentures(false);
+      renderCity(false);
       Particles.tick(dt);
       if (tab === "upgrades") {
         document.querySelectorAll("[data-upg]").forEach((btn) => {
@@ -1179,6 +1522,7 @@
         const r = $("core").getBoundingClientRect();
         clickCore(r.left + r.width / 2, r.top + r.height / 2);
       }
+      if (e.key === "c" || e.key === "C") collectAll();
       if (e.key === "1") setTab("ventures");
       if (e.key === "2") setTab("upgrades");
       if (e.key === "3") setTab("managers");
